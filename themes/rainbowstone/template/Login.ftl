@@ -47,6 +47,10 @@ input[type="password"],input[type="text"]{
 }
 body{
   background-image:url("/images/LoginBackground.jpg");
+  background:#000;
+}
+#loginBar{
+display:none;
 }
 </style>
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>

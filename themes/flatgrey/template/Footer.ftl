@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="footer">
-    <ul>
+   <#-- <ul>
         <li class="first">${nowTimestamp?datetime?string.short} - <a href="<@ofbizUrl>ListTimezones</@ofbizUrl>">${timeZone.getDisplayName(timeZone.useDaylightTime(), Static["java.util.TimeZone"].LONG, locale)}</a></li>
         <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${locale.getDisplayName(locale)}</a></li>
         <li class="last"><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>
-    </ul>
+    </ul> -->
   <p>
-    <div class="poweredBy"><span class="footerTextColour">${uiLabelMap.CommonPoweredBy} 
+  <#--   <div class="poweredBy"><span class="footerTextColour">${uiLabelMap.CommonPoweredBy} 
         <a href="http://ofbiz.apache.org" class="noicon">OFBiz </a></span><span class="footerTextColour">Copyright 2001-${nowTimestamp?string("yyyy")} 
         <a href="http://www.apache.org" class="noicon">The Apache Software Foundation - www.apache.org</a></span> 
         <span class="footerTextColour">
@@ -31,7 +31,7 @@ under the License.
             <#include "ofbizhome://runtime/SvnInfo.ftl" ignore_missing=true/>
             <#include "ofbizhome://runtime/GitInfo.ftl" ignore_missing=true/>
         </span>
-    </div>
+    </div> -->
   
   </p>
 </div>

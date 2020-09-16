@@ -19,7 +19,7 @@ under the License.
 
 <div class="bottom-bar">
   <div class="left">
-    <div class="right">&nbsp;
+    <div class="right"> 
     </div>
   </div>
 </div>

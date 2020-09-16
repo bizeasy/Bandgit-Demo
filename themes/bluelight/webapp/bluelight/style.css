@@ -89,7 +89,7 @@ body, textarea, input, select {
 }
 
 body {
-    background: #B8DFFC;
+    background: #ededed;
     font-size: 62.5%;
     position: relative;
 }
@@ -107,19 +107,19 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 input[type="text"], input[type="password"] {
-    background-color: #ffffff;
     border: #999999 solid 0.1em;
     font-size: 1.1em;
     margin: 0.2em;
-    padding: 0.1em 0 0.1em 0;
+    padding: 5px 10px;
 }
 
 input[type="submit"], input[type="button"], input[type="reset"] {
     background-color: #ffffff;
-    border: #999999 solid 0.1em;
-    color: #000099;
-    font-size: 1em;
+    border: #0680a5 solid 0.1em;
+    color: #0680a5;
+    font-size: 1.2em;
     font-weight: bold;
+    padding: 7px 20px;
 }
 
 input[type="submit"]:hover {
@@ -137,7 +137,7 @@ select {
     background-color: #ffffff;
     border: #999999 solid 0.1em;
     font-size: 1.1em;
-    height: 1.6em; /* force ctrl to scale with text */
+    padding: 5px 10px;
     margin: 0.1em;
 }
 
@@ -696,9 +696,50 @@ DIV.col-right {
 }
 
 DIV.contentarea {
-    background-color: #FFFFFF;
-    margin: 0px 7px 0px 7px;
+    background-color: #ededed;
+    margin: 0px 0px 0px 7px;
 }
+.page-container {
+    background-color: #ededed;
+}
+.page-container DIV.contentarea {
+    display: flex;
+}
+
+.page-container DIV.contentarea .tab-bar {
+    display: inline-block;
+    width: 250px;
+    background: #a2cedb;
+}
+.page-container DIV.contentarea .button-bar ul {
+    display: block;
+    WIDTH: 100%;
+    OVERFLOW: HIDDEN;
+}
+.page-container DIV.contentarea .button-bar.tab-bar ul li {
+    width: 100%;
+    BACKGROUND: transparent;
+    border-bottom: 1px solid #474747;
+    padding: 0px;
+}
+.page-container DIV.contentarea .button-bar.tab-bar ul li.selected{
+    background-color: #ededed;
+}
+.page-container DIV.contentarea .button-bar ul a,.page-container DIV.contentarea .button-bar a {
+    padding: 1.5em 0.5em 1.5em 0.5em;
+    white-space: nowrap;
+    FONT-SIZE: 13PX;
+}
+.page-container DIV.contentarea .tab-bar ul a:hover, .page-container DIV.contentarea .tab-bar ul .selected,.page-container DIV.contentarea .tab-bar ul .selected a, .tab-bar ul .selected a:hover {
+    background-color: TRANSPARENT;
+    color: #5f5f5f;
+    text-decoration: none;
+}
+.page-container DIV.contentarea #column-container {
+     width: calc(100% - 260px);
+}
+
+
 
 DIV.endcolumns { /* deprecated - use .clear */
     clear: both;
@@ -921,7 +962,7 @@ in contained elements. */
 }
 
 .page-container {
-    background-color: #B8DFFC;
+    background-color: #ededed;
 }
 
 .tabbar {
@@ -940,7 +981,7 @@ in contained elements. */
 .tabbar .breadcrumbs-start {
     float: left;
     height: 100%;
-    background: url("/bluelight/bar1.gif") repeat-x;
+    /* background: url("/bluelight/bar1.gif") repeat-x; */
     margin-left: 15px;
     padding-top: 1em;
     display: inline; /* IE Fix */
@@ -949,19 +990,35 @@ in contained elements. */
 .tabbar .breadcrumbs-sep {
     float: left;
     height: 100%;
-    background: url("/bluelight/separator.gif") no-repeat;
+    /* background: url("/bluelight/separator.gif") no-repeat; */
     padding-top: 0.8em;
     margin-bottom: -1em;
     padding-left: 3.5em;
     font-size: 1.5em;
     font-weight: bold;
+    display:none;
 }
 
 .tabbar .breadcrumbs-end {
     float: right;
     height: 100%;
-    background: url("/bluelight/corner-tr.gif") no-repeat;
+    /* background: url("/bluelight/corner-tr.gif") no-repeat; */
     width: 15px;
+}
+
+.tabbar {
+    height: 40px;
+    width: 100%;
+    /* background: url(/bluelight/bar2.gif) repeat-x; */
+    background: #090a0e;
+    margin-bottom: 15px;
+}
+.tabbar .breadcrumbs {
+    color: #FFFFFF;
+    float: left;
+    height: 100%;
+    /* background: url(/bluelight/corner-tl.gif) no-repeat; */
+    background: #090a0e;
 }
 
 .bottom-bar {
@@ -982,8 +1039,8 @@ in contained elements. */
 /* ===== Masthead (Header) Styles ===== */
 /* ==================================== */
 #masthead {
-    background-color: #FFFFFF;
-    color: #000000;
+    background-color: #090a0e;
+    color: #fff;
     font-weight: bold;
     height: 1%; /* IE fix */
 }
@@ -995,6 +1052,9 @@ in contained elements. */
 
 #masthead ul .logo-area {
     /* placeholder */
+}
+li.logo-area img {
+    max-width: 160px;
 }
 
 #masthead ul .opposed,
@@ -1082,6 +1142,11 @@ ul#preferences-menu li a.help-link {
 #footer {
     text-align: center;
     padding-bottom: 1em;
+    background: #090a0e;
+    min-height: 70px;
+    position: fixed;
+    width: 100%;
+    BOTTOM: 0px;
 }
 
 #footer p {
@@ -1146,17 +1211,18 @@ ul#preferences-menu li a.help-link {
     padding-right: 20px;
     padding-bottom: 7px;
     background: url("/bluelight/arrow-white-rt.gif") no-repeat 100% 0%;
+    display: none;
 }
-
+#main-navigation{
+    display: none;
+}
 #main-navigation ul li ul,
 #app-navigation ul li ul {
-    position: absolute;
-    background-color: #AAD6F6;
+    position: relative;
+    background-color: transparent;
     z-index: 9999;
-    width: 200px;
-    border-bottom: solid 3px #aaa;
-    border-right: solid 3px #aaa;
-    border-left: solid 1px #aaa;
+    width: 100%;
+    display: block !important;
 }
 
 #main-navigation ul li ul li a,
@@ -1165,14 +1231,16 @@ ul#preferences-menu li a.help-link {
     padding: 4px 16px 4px 16px;
     border-top: none;
     font-weight: bold;
-    color: #444;
+    color: #ededed;
 }
-
+#app-navigation ul li ul  li {
+    display: inline-block;
+}
 /*Color subcells normal mode*/
 
 #main-navigation ul li ul li a:hover,
 #app-navigation ul li ul li a:hover {
-    background: #EAEAEA;
+    background:transparent;
     background: -moz-linear-gradient(left, #F5F5F5, #AAD6F6);
     text-decoration: underline;
 }
@@ -1195,10 +1263,10 @@ ul#preferences-menu li a.help-link {
 /* ================================================= */
 
 .screenlet-title-bar {
-    background: url("/bluelight/box-head-tl.gif") no-repeat;
+    background: #a2cedb;
     color: #ffffff;
-    height: 1%; /* IE fix */
-    min-height: 1.5em;
+    height: 2%;
+    padding: 1em;
 }
 
 .screenlet-title-bar .h1,
@@ -1788,6 +1856,7 @@ render borders around empty <td> elements */
     text-align: right;
     padding-right: 1.5em;
     width: 1%;
+    color: #5f5f5f;
 }
 
 .basic-form table tr .group-label {
@@ -1853,7 +1922,7 @@ render borders around empty <td> elements */
 
 /* Pager */
 .nav-pager {
-    height: 2em;
+    height: 4em;
     padding-bottom: 0.7em;
     padding-top: 0.4em;
 }
@@ -1868,6 +1937,8 @@ render borders around empty <td> elements */
     font-weight: bold;
     line-height: 1.8em;
     margin: 0.2em;
+    color: #5f5f5f;
+    background-position: -1px 7px !important;
 }
 
 .nav-pager ul li a {
@@ -1875,16 +1946,19 @@ render borders around empty <td> elements */
     height: 16px;
     width: 16px;
     text-indent: -3000px;
+    margin: 5px 0px;
 }
 
 .nav-pager ul li span {
     display: none;
     visibility: hidden;
     display: block;
-    height: 16px;
+    height: 25px;
     width: 16px;
 }
-
+li.nav-displaying {
+    padding: 7px 10px;
+}
 .nav-pager ul .nav-first a {
     background: url(/bluelight/images/resultset_first.png) no-repeat;
 }

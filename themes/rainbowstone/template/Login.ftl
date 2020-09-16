@@ -40,6 +40,7 @@ under the License.
     width: 100%;
     background: transparent;
     padding: 10px 10px;
+    color:#fff;
 }
 input[type="password"],input[type="text"]{
     height: 2.5em;

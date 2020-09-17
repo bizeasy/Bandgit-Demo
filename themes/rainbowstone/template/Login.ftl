@@ -30,7 +30,7 @@ under the License.
     width: 100%;
     border-radius: 4px;
     background: none;
-    background-color: #002333;
+    background-color: #5bbc67;
     color: #e6e6e6;
     text-shadow: none;
     font-size: 15px;
@@ -47,8 +47,8 @@ input[type="password"],input[type="text"]{
     margin: 10px 0px;
 }
 body{
-  background-image:url("/images/LoginBackground.jpg");
-  background:#000;
+  background-image:url("/images/327163.jpg");
+  <#-- background:#000; -->
 }
 #loginBar{
 display:none;

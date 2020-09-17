@@ -709,7 +709,7 @@ DIV.contentarea {
 .page-container DIV.contentarea .tab-bar {
     display: inline-block;
     width: 250px;
-    background: #a2cedb;
+    background: #adc7ce;
 }
 .page-container DIV.contentarea .button-bar ul {
     display: block;
@@ -1143,7 +1143,7 @@ ul#preferences-menu li a.help-link {
     text-align: center;
     padding-bottom: 1em;
     background: #090a0e;
-    min-height: 70px;
+    min-height: 10px;
     position: fixed;
     width: 100%;
     BOTTOM: 0px;
@@ -1231,7 +1231,7 @@ ul#preferences-menu li a.help-link {
     padding: 4px 16px 4px 16px;
     border-top: none;
     font-weight: bold;
-    color: #ededed;
+    color: #e9e0e0;
 }
 #app-navigation ul li ul  li {
     display: inline-block;
@@ -1263,7 +1263,7 @@ ul#preferences-menu li a.help-link {
 /* ================================================= */
 
 .screenlet-title-bar {
-    background: #a2cedb;
+    background: #adc7ce;
     color: #ffffff;
     height: 2%;
     padding: 1em;

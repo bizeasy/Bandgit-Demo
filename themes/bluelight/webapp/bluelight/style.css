@@ -85,12 +85,12 @@ a:hover, a:active {
 }
 
 body, textarea, input, select {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 body {
-    background: #ededed;
-    font-size: 62.5%;
+    background: #eff3f6;
+    font-size: 80%;
     position: relative;
 }
 
@@ -180,7 +180,9 @@ th, th a {
     color: #000000;
     font-weight: bold;
 }
-
+:focus {
+    outline: -webkit-focus-ring-color auto 0px;
+}
 /* ===== Legacy Styles ===== */
 /* The "smallSubmit" class can be used to decorate
 links (A elements) and make them similar to form's buttons. */
@@ -696,11 +698,11 @@ DIV.col-right {
 }
 
 DIV.contentarea {
-    background-color: #ededed;
+    background-color: #eff3f6;
     margin: 0px 0px 0px 7px;
 }
 .page-container {
-    background-color: #ededed;
+    background-color: #eff3f6;
 }
 .page-container DIV.contentarea {
     display: flex;
@@ -709,7 +711,7 @@ DIV.contentarea {
 .page-container DIV.contentarea .tab-bar {
     display: inline-block;
     width: 250px;
-    background: #adc7ce;
+    background: #d0d9e2;
 }
 .page-container DIV.contentarea .button-bar ul {
     display: block;
@@ -723,14 +725,17 @@ DIV.contentarea {
     padding: 0px;
 }
 .page-container DIV.contentarea .button-bar.tab-bar ul li.selected{
-    background-color: #ededed;
+    background-color: #eff3f6;
 }
 .page-container DIV.contentarea .button-bar ul a,.page-container DIV.contentarea .button-bar a {
     padding: 1.5em 0.5em 1.5em 0.5em;
     white-space: nowrap;
-    FONT-SIZE: 13PX;
+    FONT-SIZE: 14PX;
+    font-weight: bold;
+    color: #0a2239;
+    
 }
-.page-container DIV.contentarea .tab-bar ul a:hover, .page-container DIV.contentarea .tab-bar ul .selected,.page-container DIV.contentarea .tab-bar ul .selected a, .tab-bar ul .selected a:hover {
+.page-container DIV.contentarea .tab-bar ul a:hover, .page-container DIV.contentarea .tab-bar ul .selected, .tab-bar ul .selected a:hover {
     background-color: TRANSPARENT;
     color: #5f5f5f;
     text-decoration: none;
@@ -962,14 +967,9 @@ in contained elements. */
 }
 
 .page-container {
-    background-color: #ededed;
+    background-color: #eff3f6;
 }
-
-.tabbar {
-    height: 40px;
-    width: 100%;
-    background: url("/bluelight/bar2.gif") repeat-x;
-}
+ 
 
 .tabbar .breadcrumbs {
     color: #FFFFFF;
@@ -1007,7 +1007,7 @@ in contained elements. */
 }
 
 .tabbar {
-    height: 40px;
+    height: 60px;
     width: 100%;
     /* background: url(/bluelight/bar2.gif) repeat-x; */
     background: #090a0e;
@@ -1053,8 +1053,20 @@ in contained elements. */
 #masthead ul .logo-area {
     /* placeholder */
 }
+li.user-icon {
+    width: 39px;
+    margin: 0px !important;
+    margin-top: -12px !important;
+    padding: 0px 0px 0px 8px !important;
+}
+li.user-icon img{
+    width: 100%;
+    max-width: 100%;
+}
 li.logo-area img {
-    max-width: 160px;
+    width: 119px;
+    height: 54px;
+    mix-blend-mode: lighten;
 }
 
 #masthead ul .opposed,
@@ -1066,11 +1078,11 @@ li.logo-area img {
 ul#preferences-menu {
     font-size: 1.1em;
     float: right;
+    margin:15px 0;
 }
 
 ul#preferences-menu li {
-    border-left: solid 1px #BBBBBB;
-    padding: 0 1em 0 1em;
+     padding: 0 1em 0 1em;
 }
 
 ul#preferences-menu li.first,
@@ -1118,6 +1130,7 @@ ul#preferences-menu li.expanded a {
 ul#preferences-menu li a {
     color: #5CA3D7;
     padding: 0.2em;
+    font-size: 14px;
 }
 
 ul#preferences-menu a:hover {
@@ -1194,6 +1207,7 @@ ul#preferences-menu li a.help-link {
 #main-navigation, #app-navigation {
     float: left;
     font-size: 130%;
+    margin-top:7px; 
 }
 
 #app-navigation .clear {
@@ -1232,6 +1246,7 @@ ul#preferences-menu li a.help-link {
     border-top: none;
     font-weight: bold;
     color: #e9e0e0;
+    font-size: 14px;
 }
 #app-navigation ul li ul  li {
     display: inline-block;
@@ -1251,7 +1266,36 @@ ul#preferences-menu li a.help-link {
 #app-navigation ul li ul li a.disabled {
     color: #999999;
 }
-
+.search-block{
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #fff;
+    display: flex;
+}
+.search-menu-icon{ 
+    width: 70px;
+    /* height: 46px; */
+    border-radius: 3px;
+    background-color: #eff3f6;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+    padding: 22px 20px 15px;
+}
+.search-bar {
+    width: calc(100% - 131px);
+    padding: 10px;
+    margin-left: 15px;
+    border-radius: 3px;
+    background-color: #eff3f6;
+}
+.search-bar input{
+    border: 0px solid #fff;
+    width: calc(100% - 25px);
+    background: transparent;
+    font-size: 16px;
+ 
+}
 /*Color subcells disabled mode*/
 
 #main-navigation ul li ul li ul.secondary {
@@ -1263,7 +1307,7 @@ ul#preferences-menu li a.help-link {
 /* ================================================= */
 
 .screenlet-title-bar {
-    background: #adc7ce;
+    background: #d0d9e2;
     color: #ffffff;
     height: 2%;
     padding: 1em;
@@ -1303,6 +1347,8 @@ ul#preferences-menu li a.help-link {
 .screenlet-title-bar ul .h3 {
     border-left: none;
     float: left;
+    color: #0a2239;
+    font-size: 16px;
 }
 
 .screenlet-title-bar .h1 {
@@ -1569,9 +1615,7 @@ the top of the main content area */
 }
 
 .tab-bar ul a:hover, .tab-bar ul .selected, .tab-bar ul .selected a, .tab-bar ul .selected a:hover {
-    background-color: #5f9fcf;
-    color: #ffffff;
-    text-decoration: none;
+      text-decoration: none;
 }
 
 .tab-bar ul .disabled {
@@ -3068,7 +3112,6 @@ body .ui-tooltip {
 /* Component containers
 ----------------------------------*/
 .ui-widget {
-    font-family: Verdana, Arial, sans-serif;
     font-size: 1.1em;
 }
 
@@ -3077,7 +3120,6 @@ body .ui-tooltip {
 }
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-    font-family: Verdana, Arial, sans-serif;
     font-size: 1em;
 }
 

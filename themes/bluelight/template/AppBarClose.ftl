@@ -27,8 +27,7 @@ under the License.
   <div class="breadcrumbs-end">
   </div>
 </div>
-<div class="clear">
-</div>
+ 
 
 <#if userLogin??>
 <script type="text/javascript">
@@ -36,3 +35,12 @@ under the License.
   var appmenu = new DropDownMenu(jQuery('#app-navigation'));
 </script>
 </#if>
+ 
+<div class="search-block">
+  <div class="search-menu-icon">
+    <img src="/images/group-3.svg"  class="Group-3"/>
+  </div>
+  <div class="search-bar">
+    <input type="text" placeholder="Search"/>
+  </div>
+ </div>

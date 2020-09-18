@@ -1,3 +1,4 @@
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -131,9 +132,9 @@ under the License.
         <#if "Y" == (userPreferences.COMPACT_HEADER)?default("N")>
             <#if shortcutIcon?has_content>
                 <#if organizationLogoLinkURL?has_content>
-                    <li><a href="<@ofbizUrl>/themes/common/webapp/images/heathrow_logo.jpg</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${StringUtil.wrapString(organizationLogoLinkURL)}</@ofbizContentUrl>" height="16px" width="16px"></a></li>
+                    <li class="logo-area"><a href="<@ofbizUrl>/themes/common/webapp/images/heathrow_logo.jpg</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="/images/heathrow_logo.jpg"></a></li>
                     <#else>
-                    <li class="logo-area"><a href="<@ofbizUrl>/themes/common/webapp/images/heathrow_logo.jpg</@ofbizUrl>"><img src="<@ofbizContentUrl>${StringUtil.wrapString(shortcutIcon)}</@ofbizContentUrl>" height="16px" width="16px" alt="" /></a></li>
+                    <li class="logo-area"><a href="<@ofbizUrl>/themes/common/webapp/images/heathrow_logo.jpg</@ofbizUrl>"><img src="/images/heathrow_logo.jpg"/></a></li>
                 </#if>
           </#if>
         <#else>
@@ -164,6 +165,19 @@ under the License.
         </#if>
         <li class="control-area">
           <ul id="preferences-menu">
+            
+           <!-- <li class="first"><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle} : ${locale.getDisplayName(locale)}</a></li> -->
+            <#if userLogin??>
+            <!--  <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li> -->
+              <li><a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a></li>
+            <#else>
+              <li><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></li>
+            </#if>
+            <#--if webSiteId?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??-->
+            <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
+              <#include "component://common-theme/template/includes/HelpLink.ftl" />
+              <li><a class="help-link <#if pageAvail?has_content> alert</#if>" href="javascript:lookup_popup1('showHelp?helpTopic=${helpTopic}&amp;portalPageId=${(parameters.portalPageId!)?html}','help' ,500,500);" title="${uiLabelMap.CommonHelp}"></a></li>
+            </#if>
             <#if userLogin??>
               <#if userLogin.partyId??>
                 <#assign size = companyListSize?default(0)>
@@ -182,19 +196,11 @@ under the License.
               <#if orgName?has_content>              
                 <li class="org">${orgName}</li>
               </#if>
+              <li class="user-icon">
+              <img src="/images/default-user.png">
+              </li>
             </#if>
-            <li class="first"><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle} : ${locale.getDisplayName(locale)}</a></li>
-            <#if userLogin??>
-              <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>
-              <li><a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a></li>
-            <#else>
-              <li><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></li>
-            </#if>
-            <#--if webSiteId?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??-->
-            <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
-              <#include "component://common-theme/template/includes/HelpLink.ftl" />
-              <li><a class="help-link <#if pageAvail?has_content> alert</#if>" href="javascript:lookup_popup1('showHelp?helpTopic=${helpTopic}&amp;portalPageId=${(parameters.portalPageId!)?html}','help' ,500,500);" title="${uiLabelMap.CommonHelp}"></a></li>
-            </#if>
+            
             <#if userLogin??>
               <#if "Y" == (userPreferences.COMPACT_HEADER)?default("N")>
                 <li class="collapsed"><a href="javascript:document.setUserPreferenceCompactHeaderN.submit()">&nbsp;&nbsp;</a>
@@ -219,5 +225,5 @@ under the License.
           </ul>
         </li>
       </ul>
-      <br class="clear" />
+     
     </div>

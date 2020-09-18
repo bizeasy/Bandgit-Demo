@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" title="UT Application" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="Home"><link target="main"/></menu-item>
+        <menu-item name="contacts" title="Contacts"><link target="contacts"/></menu-item>
+        <menu-item name="sales" title="Sales"><link target="sales"/></menu-item>
+        <menu-item name="products" title="Products"><link target="FindProduct"/></menu-item>
+        <menu-item name="stock" title="Stock"><link target="stock"/></menu-item>
+        <menu-item name="reports" title="Reports"><link target="Reports"/></menu-item>
+    </menu>
+    <menu name="MainTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="dashboard" title="Dashboard">
+            <link target="contacts"/>
+        </menu-item>
+    </menu>
+    <menu name="ContactsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="allContacts" title="All Contacts">
+            <link target="contacts"/>
+        </menu-item>
+        <menu-item name="customerContacts" title="Customer Contacts">
+            <link target="customers"/>
+        </menu-item>
+        <menu-item name="supplierContacts" title="Supplier Contacts">
+            <link target="suppliers"/>
+        </menu-item>
+    </menu>
+    <menu name="SalesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="allSalesOrders" title="All Sales Order">
+            <link target="sales"/>
+        </menu-item>
+        <menu-item name="draftAndQuote" title="Draft And Quote">
+            <link target="draftAndQuote"/>
+        </menu-item>
+        <menu-item name="orders" title="Orders">
+            <link target="orders"/>
+        </menu-item>
+        <menu-item name="invoiceAndCreditNote" title="Invoice And Credit Notes">
+            <link target="invoiceAndCreditNote"/>
+        </menu-item>
+    </menu>
+    <menu name="ProductsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="product" title="Product">
+            <link target="FindProduct"/>
+        </menu-item>
+        <menu-item name="category" title="Category">
+            <link target="FindCategory"/>
+        </menu-item>
+    </menu>
+    <menu name="StockTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="stockHolding" title="Stock Holding">
+            <link target="stockHolding"/>
+        </menu-item>
+        <menu-item name="stockAdjustments" title="Stock Adjustments">
+            <link target="stockAdjustments"/>
+        </menu-item>
+    </menu>
+    <menu name="reportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="overview" title="Overview">
+            <link target="overview"/>
+        </menu-item>
+        <menu-item name="salesReports" title="Sales Reports">
+            <link target="salesReports"/>
+        </menu-item>
+    </menu>
+</menus>

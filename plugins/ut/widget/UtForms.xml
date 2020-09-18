@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="LookupContacts" type="single" target="contacts" focus-field-name="partyId">
+        <actions>
+            <set field="states" value="${groovy: org.apache.ofbiz.common.CommonWorkers.getStateList(delegator)}"/>
+            <!-- Here is some alternate code to get states limited to a region
+                <set field="states" value="${groovy: org.apache.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator,requestParameters.CUSTOMER_COUNTRY)}"/>
+            -->
+        </actions>
+        <field name="statusId"><hidden value="PARTY_ENABLED"/></field>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <!-- <field name="extInfo" event="onClick" action="javascript:$('#ListParty' + this.value +'_body').toggle(true);collapseFindPartyOptions('ListParty' + this.value +'_body');" title="${uiLabelMap.PartyContactInformation}">
+            <radio>
+                <option key="N" description="${uiLabelMap.CommonNone}"/>
+                <option key="P" description="${uiLabelMap.PartyPostal}"/>
+                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
+                <option key="O" description="${uiLabelMap.CommonOther}"/>
+            </radio>
+        </field> -->
+        <field name="hideFields"><hidden value="Y"/></field>
+        <field name="partyId"><text size="15" /></field>
+        <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
+        <field name="externalId"><text size="15" /></field> -->
+        <field name="lastName"><text size="15"/></field>
+        <field name="firstName"><text size="15"/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text size="15"/></field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <!-- <entity-options entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options> -->
+                <option key="CUSTOMER" description="Customer"/>
+                <option key="SUPPLIER" description="Supplier"/>
+            </drop-down>
+        </field>
+        <field name="partyTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyType"/>
+            </drop-down>
+        </field>
+        <!-- <field name="idValue"><text size="15"/></field>
+        <field name="partyIdentificationTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyIdentificationType"/>
+            </drop-down>
+        </field>
+        <field name="address1"><text size="15"/></field>
+        <field name="address2"><text size="15"/></field>
+        <field name="city"><text size="15"/></field>
+        <field name="stateProvinceGeoId">
+            <drop-down allow-empty="true">
+                <list-options list-name="states" key-name="geoId" description="${geoName}"/>
+            </drop-down>
+        </field>
+        <field name="postalCode"><text size="6"/></field>
+        <field name="countryCode" title="${uiLabelMap.CommonCountryCode}"><text size="15"/></field>
+        <field name="areaCode" title="${uiLabelMap.PartyAreaCode}"><text size="15"/></field>
+        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}"><text size="15"/></field>
+        <field name="infoString" title="${uiLabelMap.PartyContactInformation}">
+            <text size="15"/>
+        </field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}" use-when="parentTypeId == null">
+            <drop-down allow-multiple="true" size="5" allow-empty="false">
+                <entity-options entity-name="PartyClassificationGroupAndType" description="${typeDescription} - ${partyClassificationGroupId}" key-field-name="partyClassificationGroupId">
+                    <entity-order-by field-name="partyClassificationGroupId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="inventoryItemId"><text size="15"/></field>
+        <field name="serialNumber"><text size="15"/></field>
+        <field name="softIdentifier"><text size="15"/></field> -->
+        <field name="searchButton" widget-style="search"><submit/></field>
+        <sort-order>
+            <sort-field name="extInfo"/>
+            <sort-field name="partyId"/>
+            <sort-field name="userLoginId"/>
+            <sort-field name="externalId"/>
+            <sort-field name="lastName"/>
+            <sort-field name="firstName"/>
+            <sort-field name="groupName"/>
+            <sort-field name="roleTypeId"/>
+            <sort-field name="partyTypeId"/>
+            <sort-field name="partyClassificationGroupId"/>
+            <field-group title="${uiLabelMap.PartyPartyIdentification}" initially-collapsed="true">
+                <sort-field name="idValue"/>
+                <sort-field name="partyIdentificationTypeId"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyPostal}" initially-collapsed="true" id="ListPartyP">
+                <sort-field name="address1"/>
+                <sort-field name="address2"/>
+                <sort-field name="city"/>
+                <sort-field name="stateProvinceGeoId"/>
+                <sort-field name="postalCode"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyTelecom}" initially-collapsed="true" id="ListPartyT">
+                <sort-field name="countryCode"/>
+                <sort-field name="areaCode"/>
+                <sort-field name="contactNumber"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyContactInformationOther}" initially-collapsed="true" id="ListPartyO">
+                <sort-field name="infoString"/>
+            </field-group>
+            <field-group title="${uiLabelMap.ProductProduct}" initially-collapsed="true">
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="serialNumber"/>
+                <sort-field name="softIdentifier"/>
+            </field-group>
+            <sort-field name="searchButton"/>
+        </sort-order>
+    </form>
+    
+    <grid name="ListParty" target="expirePartyRate" list-name="listIt"
+          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFindParty" auto-field-map="parameters" result-map-list="listIt"/>
+        </actions>
+        <row-actions>
+            <entity-and entity-name="UserLogin" list="logins" use-cache="true">
+                <field-map field-name="partyId" from-field="partyId"/>
+            </entity-and>
+            <set field="userLoginSize" value="${groovy:logins.size()}" type="Integer"/>
+            <service service-name="getPartyMainRole" result-map="mainRole">
+                <field-map field-name="partyId" from-field="partyId"/>
+                <field-map field-name="userLogin" from-field="userLogin"/>
+            </service>
+            <entity-and entity-name="PartyClassification" list="partyClassifications" use-cache="true">
+                <field-map field-name="partyId" from-field="partyId"/>
+            </entity-and>
+            <set field="fieldId" value="partyClassificationGroupId"/>
+            <set field="partyClassificationGroupIds" value="${groovy:org.apache.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(partyClassifications, fieldId, true);}"/>
+        </row-actions>
+        <field name="partyId" sort-field="true">
+            <hyperlink description="${partyId}" target="viewprofile">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+        <!-- <field name="ClassificationGroup" use-when="partyClassificationGroupIds.size() > 0"><display description="${partyClassificationGroupIds}"/></field> -->
+        <field name="userLoginId" use-when="userLoginSize > 1"><include-grid name="ListPartyUserLogin" location="component://party/widget/partymgr/PartyForms.xml"/></field>
+        <field name="userLoginId" use-when="userLoginSize == 1"><display description="${logins[0].userLoginId}"/></field>
+        <field name="userLoginId" use-when="userLoginSize == 0"><display description="(${uiLabelMap.CommonNone})"/></field>
+        <!-- <field name="externalId"><display description="${externalId}"/></field> -->
+        <field name="name"><display description="${groovy:org.apache.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, true)}"/></field>
+        <field name="partyTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PartyType"/></field>
+        <!-- <field name="mainRole" title="${uiLabelMap.PartyMainRole}"><display description="${mainRole.description}"/></field> -->
+        <field name="createdDate" sort-field="true"><display type="date"/></field>
+        <field name="lastModifiedDate" sort-field="true"><display type="date"/></field>
+        <field name="partyAction" title=" "><include-menu name="ListPartyAction" location="component://party/widget/partymgr/PartyMenus.xml"/></field>
+        <sort-order>
+             <last-field name="createdDate"/>
+             <last-field name="lastModifiedDate"/>
+             <last-field name="partyAction"/>
+        </sort-order>
+    </grid>
+
+    <grid name="ListPartyN" extends="ListParty"/>
+    <grid name="ListPartyI" extends="ListParty">
+        <field name="idValue" sort-field="true"><display/></field>
+        <field name="partyIdentificationTypeId" sort-field="true"><display-entity entity-name="PartyIdentificationType"/></field>
+    </grid>
+    <grid name="ListPartyP" extends="ListParty">
+        <field name="city" sort-field="true"><display description="${city}, ${stateProvinceGeoId}"/></field>
+        <field name="postalCode" sort-field="true"><display/></field>
+    </grid>
+    <grid name="ListPartyT" extends="ListParty">
+        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}" sort-field="true"><display/></field>
+    </grid>
+    <grid name="ListPartyO" extends="ListParty">
+        <field name="infoString" title="${uiLabelMap.PartyContactInformation}"><display/></field>
+    </grid>
+    <grid name="ListPartyUserLogin" list-name="logins" default-table-style="basic-table" hide-header="true">
+        <field name="userLoginId"><display/></field>
+        <field name="enabled"><display/></field>
+        <field name="disabledDateTime"><display type="date"/></field>
+    </grid>
+    
+    <form name="LookupCustomer" type="single" target="customers" focus-field-name="partyId">
+        <actions>
+            <set field="states" value="${groovy: org.apache.ofbiz.common.CommonWorkers.getStateList(delegator)}"/>
+            <!-- Here is some alternate code to get states limited to a region
+                <set field="states" value="${groovy: org.apache.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator,requestParameters.CUSTOMER_COUNTRY)}"/>
+            -->
+        </actions>
+        <field name="statusId"><hidden value="PARTY_ENABLED"/></field>
+        <field name="roleTypeId"><hidden value="CUSTOMER"/></field>
+        
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <!-- <field name="extInfo" event="onClick" action="javascript:$('#ListParty' + this.value +'_body').toggle(true);collapseFindPartyOptions('ListParty' + this.value +'_body');" title="${uiLabelMap.PartyContactInformation}">
+            <radio>
+                <option key="N" description="${uiLabelMap.CommonNone}"/>
+                <option key="P" description="${uiLabelMap.PartyPostal}"/>
+                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
+                <option key="O" description="${uiLabelMap.CommonOther}"/>
+            </radio>
+        </field> -->
+        <field name="hideFields"><hidden value="Y"/></field>
+        <field name="partyId"><text size="15" /></field>
+        <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
+        <field name="externalId"><text size="15" /></field> -->
+        <field name="lastName"><text size="15"/></field>
+        <field name="firstName"><text size="15"/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text size="15"/></field>
+        <!-- <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <option key="CUSTOMER" description="Customer"/>
+                <option key="SUPPLIER" description="Supplier"/>
+            </drop-down>
+        </field> -->
+        <field name="partyTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyType"/>
+            </drop-down>
+        </field>
+        <!-- <field name="idValue"><text size="15"/></field>
+        <field name="partyIdentificationTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyIdentificationType"/>
+            </drop-down>
+        </field>
+        <field name="address1"><text size="15"/></field>
+        <field name="address2"><text size="15"/></field>
+        <field name="city"><text size="15"/></field>
+        <field name="stateProvinceGeoId">
+            <drop-down allow-empty="true">
+                <list-options list-name="states" key-name="geoId" description="${geoName}"/>
+            </drop-down>
+        </field>
+        <field name="postalCode"><text size="6"/></field>
+        <field name="countryCode" title="${uiLabelMap.CommonCountryCode}"><text size="15"/></field>
+        <field name="areaCode" title="${uiLabelMap.PartyAreaCode}"><text size="15"/></field>
+        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}"><text size="15"/></field>
+        <field name="infoString" title="${uiLabelMap.PartyContactInformation}">
+            <text size="15"/>
+        </field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}" use-when="parentTypeId == null">
+            <drop-down allow-multiple="true" size="5" allow-empty="false">
+                <entity-options entity-name="PartyClassificationGroupAndType" description="${typeDescription} - ${partyClassificationGroupId}" key-field-name="partyClassificationGroupId">
+                    <entity-order-by field-name="partyClassificationGroupId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="inventoryItemId"><text size="15"/></field>
+        <field name="serialNumber"><text size="15"/></field>
+        <field name="softIdentifier"><text size="15"/></field> -->
+        <field name="searchButton" widget-style="search"><submit/></field>
+        <sort-order>
+            <sort-field name="extInfo"/>
+            <sort-field name="partyId"/>
+            <sort-field name="userLoginId"/>
+            <sort-field name="externalId"/>
+            <sort-field name="lastName"/>
+            <sort-field name="firstName"/>
+            <sort-field name="groupName"/>
+            <sort-field name="roleTypeId"/>
+            <sort-field name="partyTypeId"/>
+            <sort-field name="partyClassificationGroupId"/>
+            <field-group title="${uiLabelMap.PartyPartyIdentification}" initially-collapsed="true">
+                <sort-field name="idValue"/>
+                <sort-field name="partyIdentificationTypeId"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyPostal}" initially-collapsed="true" id="ListPartyP">
+                <sort-field name="address1"/>
+                <sort-field name="address2"/>
+                <sort-field name="city"/>
+                <sort-field name="stateProvinceGeoId"/>
+                <sort-field name="postalCode"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyTelecom}" initially-collapsed="true" id="ListPartyT">
+                <sort-field name="countryCode"/>
+                <sort-field name="areaCode"/>
+                <sort-field name="contactNumber"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyContactInformationOther}" initially-collapsed="true" id="ListPartyO">
+                <sort-field name="infoString"/>
+            </field-group>
+            <field-group title="${uiLabelMap.ProductProduct}" initially-collapsed="true">
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="serialNumber"/>
+                <sort-field name="softIdentifier"/>
+            </field-group>
+            <sort-field name="searchButton"/>
+        </sort-order>
+    </form>
+    
+    <form name="LookupSupplier" type="single" target="suppliers" focus-field-name="partyId">
+        <actions>
+            <set field="states" value="${groovy: org.apache.ofbiz.common.CommonWorkers.getStateList(delegator)}"/>
+            <!-- Here is some alternate code to get states limited to a region
+                <set field="states" value="${groovy: org.apache.ofbiz.common.CommonWorkers.getAssociatedStateList(delegator,requestParameters.CUSTOMER_COUNTRY)}"/>
+            -->
+        </actions>
+        <field name="statusId"><hidden value="PARTY_ENABLED"/></field>
+        <field name="roleTypeId"><hidden value="SUPPLIER"/></field>
+        
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <!-- <field name="extInfo" event="onClick" action="javascript:$('#ListParty' + this.value +'_body').toggle(true);collapseFindPartyOptions('ListParty' + this.value +'_body');" title="${uiLabelMap.PartyContactInformation}">
+            <radio>
+                <option key="N" description="${uiLabelMap.CommonNone}"/>
+                <option key="P" description="${uiLabelMap.PartyPostal}"/>
+                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
+                <option key="O" description="${uiLabelMap.CommonOther}"/>
+            </radio>
+        </field> -->
+        <field name="hideFields"><hidden value="Y"/></field>
+        <field name="partyId"><text size="15" /></field>
+        <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
+        <field name="externalId"><text size="15" /></field> -->
+        <field name="lastName"><text size="15"/></field>
+        <field name="firstName"><text size="15"/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text size="15"/></field>
+        <!-- <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <option key="CUSTOMER" description="Customer"/>
+                <option key="SUPPLIER" description="Supplier"/>
+            </drop-down>
+        </field> -->
+        <field name="partyTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyType"/>
+            </drop-down>
+        </field>
+        <!-- <field name="idValue"><text size="15"/></field>
+        <field name="partyIdentificationTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyIdentificationType"/>
+            </drop-down>
+        </field>
+        <field name="address1"><text size="15"/></field>
+        <field name="address2"><text size="15"/></field>
+        <field name="city"><text size="15"/></field>
+        <field name="stateProvinceGeoId">
+            <drop-down allow-empty="true">
+                <list-options list-name="states" key-name="geoId" description="${geoName}"/>
+            </drop-down>
+        </field>
+        <field name="postalCode"><text size="6"/></field>
+        <field name="countryCode" title="${uiLabelMap.CommonCountryCode}"><text size="15"/></field>
+        <field name="areaCode" title="${uiLabelMap.PartyAreaCode}"><text size="15"/></field>
+        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}"><text size="15"/></field>
+        <field name="infoString" title="${uiLabelMap.PartyContactInformation}">
+            <text size="15"/>
+        </field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}" use-when="parentTypeId == null">
+            <drop-down allow-multiple="true" size="5" allow-empty="false">
+                <entity-options entity-name="PartyClassificationGroupAndType" description="${typeDescription} - ${partyClassificationGroupId}" key-field-name="partyClassificationGroupId">
+                    <entity-order-by field-name="partyClassificationGroupId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="inventoryItemId"><text size="15"/></field>
+        <field name="serialNumber"><text size="15"/></field>
+        <field name="softIdentifier"><text size="15"/></field> -->
+        <field name="searchButton" widget-style="search"><submit/></field>
+        <sort-order>
+            <sort-field name="extInfo"/>
+            <sort-field name="partyId"/>
+            <sort-field name="userLoginId"/>
+            <sort-field name="externalId"/>
+            <sort-field name="lastName"/>
+            <sort-field name="firstName"/>
+            <sort-field name="groupName"/>
+            <sort-field name="roleTypeId"/>
+            <sort-field name="partyTypeId"/>
+            <sort-field name="partyClassificationGroupId"/>
+            <field-group title="${uiLabelMap.PartyPartyIdentification}" initially-collapsed="true">
+                <sort-field name="idValue"/>
+                <sort-field name="partyIdentificationTypeId"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyPostal}" initially-collapsed="true" id="ListPartyP">
+                <sort-field name="address1"/>
+                <sort-field name="address2"/>
+                <sort-field name="city"/>
+                <sort-field name="stateProvinceGeoId"/>
+                <sort-field name="postalCode"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyTelecom}" initially-collapsed="true" id="ListPartyT">
+                <sort-field name="countryCode"/>
+                <sort-field name="areaCode"/>
+                <sort-field name="contactNumber"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyContactInformationOther}" initially-collapsed="true" id="ListPartyO">
+                <sort-field name="infoString"/>
+            </field-group>
+            <field-group title="${uiLabelMap.ProductProduct}" initially-collapsed="true">
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="serialNumber"/>
+                <sort-field name="softIdentifier"/>
+            </field-group>
+            <sort-field name="searchButton"/>
+        </sort-order>
+    </form>
+
+</forms>

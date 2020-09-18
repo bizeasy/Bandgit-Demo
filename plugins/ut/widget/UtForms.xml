@@ -30,73 +30,18 @@ under the License.
         </actions>
         <field name="statusId"><hidden value="PARTY_ENABLED"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
-        <!-- <field name="extInfo" event="onClick" action="javascript:$('#ListParty' + this.value +'_body').toggle(true);collapseFindPartyOptions('ListParty' + this.value +'_body');" title="${uiLabelMap.PartyContactInformation}">
-            <radio>
-                <option key="N" description="${uiLabelMap.CommonNone}"/>
-                <option key="P" description="${uiLabelMap.PartyPostal}"/>
-                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
-                <option key="O" description="${uiLabelMap.CommonOther}"/>
-            </radio>
-        </field> -->
         <field name="hideFields"><hidden value="Y"/></field>
         <field name="partyId"><text size="15" /></field>
-        <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
-        <field name="externalId"><text size="15" /></field> -->
-        <field name="lastName"><text size="15"/></field>
-        <field name="firstName"><text size="15"/></field>
-        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text size="15"/></field>
-        <field name="roleTypeId">
-            <drop-down allow-empty="true">
-                <!-- <entity-options entity-name="RoleType" key-field-name="roleTypeId">
-                    <entity-order-by field-name="description"/>
-                </entity-options> -->
-                <option key="CUSTOMER" description="Customer"/>
-                <option key="SUPPLIER" description="Supplier"/>
-            </drop-down>
-        </field>
-        <field name="partyTypeId" title="${uiLabelMap.CommonType}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="PartyType"/>
-            </drop-down>
-        </field>
-        <!-- <field name="idValue"><text size="15"/></field>
-        <field name="partyIdentificationTypeId">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="PartyIdentificationType"/>
-            </drop-down>
-        </field>
-        <field name="address1"><text size="15"/></field>
-        <field name="address2"><text size="15"/></field>
-        <field name="city"><text size="15"/></field>
-        <field name="stateProvinceGeoId">
-            <drop-down allow-empty="true">
-                <list-options list-name="states" key-name="geoId" description="${geoName}"/>
-            </drop-down>
-        </field>
-        <field name="postalCode"><text size="6"/></field>
-        <field name="countryCode" title="${uiLabelMap.CommonCountryCode}"><text size="15"/></field>
-        <field name="areaCode" title="${uiLabelMap.PartyAreaCode}"><text size="15"/></field>
-        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}"><text size="15"/></field>
-        <field name="infoString" title="${uiLabelMap.PartyContactInformation}">
-            <text size="15"/>
-        </field>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}" use-when="parentTypeId == null">
-            <drop-down allow-multiple="true" size="5" allow-empty="false">
-                <entity-options entity-name="PartyClassificationGroupAndType" description="${typeDescription} - ${partyClassificationGroupId}" key-field-name="partyClassificationGroupId">
-                    <entity-order-by field-name="partyClassificationGroupId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="inventoryItemId"><text size="15"/></field>
-        <field name="serialNumber"><text size="15"/></field>
-        <field name="softIdentifier"><text size="15"/></field> -->
+        <field name="supplier" title="Supplier"><text size="15"/></field>
+        <field name="customer" title="Customer"><text size="15"/></field>
         <field name="searchButton" widget-style="search"><submit/></field>
         <sort-order>
             <sort-field name="extInfo"/>
             <sort-field name="partyId"/>
             <sort-field name="userLoginId"/>
             <sort-field name="externalId"/>
-            <sort-field name="lastName"/>
+            <sort-field name="customer"/>
+            <sort-field name="supplier"/>
             <sort-field name="firstName"/>
             <sort-field name="groupName"/>
             <sort-field name="roleTypeId"/>
@@ -133,7 +78,7 @@ under the License.
     <grid name="ListParty" target="expirePartyRate" list-name="listIt"
           odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <service service-name="performFindParty" auto-field-map="parameters" result-map-list="listIt"/>
+            <service service-name="performUtFindParty" auto-field-map="parameters" result-map-list="listIt"/>
         </actions>
         <row-actions>
             <entity-and entity-name="UserLogin" list="logins" use-cache="true">
@@ -161,11 +106,13 @@ under the License.
         <field name="userLoginId" use-when="userLoginSize == 0"><display description="(${uiLabelMap.CommonNone})"/></field>
         <!-- <field name="externalId"><display description="${externalId}"/></field> -->
         <field name="name"><display description="${groovy:org.apache.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, true)}"/></field>
-        <field name="partyTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PartyType"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="RoleType"/></field>
         <!-- <field name="mainRole" title="${uiLabelMap.PartyMainRole}"><display description="${mainRole.description}"/></field> -->
         <field name="createdDate" sort-field="true"><display type="date"/></field>
-        <field name="lastModifiedDate" sort-field="true"><display type="date"/></field>
-        <field name="partyAction" title=" "><include-menu name="ListPartyAction" location="component://party/widget/partymgr/PartyMenus.xml"/></field>
+        <!-- <field name="lastModifiedDate" sort-field="true"><display type="date"/></field> -->
+        <field name="contactNumber" title="Phone Number" sort-field="true"><display/></field>
+        <field name="infoString" title="Email Address"><display/></field>
+        <!-- <field name="partyAction" title=" "><include-menu name="ListPartyAction" location="component://party/widget/partymgr/PartyMenus.xml"/></field> -->
         <sort-order>
              <last-field name="createdDate"/>
              <last-field name="lastModifiedDate"/>
@@ -217,9 +164,7 @@ under the License.
         <field name="partyId"><text size="15" /></field>
         <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
         <field name="externalId"><text size="15" /></field> -->
-        <field name="lastName"><text size="15"/></field>
-        <field name="firstName"><text size="15"/></field>
-        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text size="15"/></field>
+        <field name="customer" title="Name"><text size="15"/></field>
         <!-- <field name="roleTypeId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" key-field-name="roleTypeId">
@@ -229,11 +174,11 @@ under the License.
                 <option key="SUPPLIER" description="Supplier"/>
             </drop-down>
         </field> -->
-        <field name="partyTypeId" title="${uiLabelMap.CommonType}">
+        <!-- <field name="partyTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyType"/>
             </drop-down>
-        </field>
+        </field> -->
         <!-- <field name="idValue"><text size="15"/></field>
         <field name="partyIdentificationTypeId">
             <drop-down allow-empty="true">
@@ -273,7 +218,7 @@ under the License.
             <sort-field name="externalId"/>
             <sort-field name="lastName"/>
             <sort-field name="firstName"/>
-            <sort-field name="groupName"/>
+            <sort-field name="customer"/>
             <sort-field name="roleTypeId"/>
             <sort-field name="partyTypeId"/>
             <sort-field name="partyClassificationGroupId"/>

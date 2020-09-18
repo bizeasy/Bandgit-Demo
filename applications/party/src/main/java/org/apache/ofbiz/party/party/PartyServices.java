@@ -2617,4 +2617,467 @@ public class PartyServices {
         result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "PartyNewPartiesCreated", UtilMisc.toMap("partiesCreated", partiesCreated), locale));
         return result;
     }
+    
+    public static Map<String, Object> performUtFindParty(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Debug.log("context ================"+context);
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        String extInfo = (String) context.get("extInfo");
+        Debug.log("extInfo ================"+extInfo);
+        EntityCondition extCond = (EntityCondition) context.get("extCond");
+        EntityListIterator listIt = null;
+
+        // get the lookup flag
+        String noConditionFind = (String) context.get("noConditionFind");
+
+        // create the dynamic view entity
+        DynamicViewEntity dynamicView = new DynamicViewEntity();
+
+        // default view settings
+        dynamicView.addMemberEntity("PT", "Party");
+        dynamicView.addAlias("PT", "partyId");
+        dynamicView.addAlias("PT", "statusId");
+        dynamicView.addAlias("PT", "partyTypeId");
+        dynamicView.addAlias("PT", "externalId");
+        dynamicView.addAlias("PT", "createdDate");
+        dynamicView.addAlias("PT", "lastModifiedDate");
+        dynamicView.addRelation("one-nofk", "", "PartyType", ModelKeyMap.makeKeyMapList("partyTypeId"));
+        dynamicView.addRelation("many", "", "UserLogin", ModelKeyMap.makeKeyMapList("partyId"));
+
+        // define the main condition & expression list
+        List<EntityCondition> andExprs = new ArrayList<>();
+        EntityCondition mainCond = null;
+
+        List<String> orderBy = new ArrayList<>();
+        String sortField = (String) context.get("sortField");
+        if(UtilValidate.isNotEmpty(sortField)){
+            orderBy.add(sortField);
+        }
+        List<String> fieldsToSelect = new ArrayList<>();
+        // fields we need to select; will be used to set distinct
+        fieldsToSelect.add("partyId");
+        fieldsToSelect.add("statusId");
+        fieldsToSelect.add("partyTypeId");
+        fieldsToSelect.add("externalId");
+        fieldsToSelect.add("createdDate");
+        fieldsToSelect.add("lastModifiedDate");
+
+        // filter on parties that have relationship with logged in user
+        String partyRelationshipTypeId = (String) context.get("partyRelationshipTypeId");
+        if (UtilValidate.isNotEmpty(partyRelationshipTypeId)) {
+            // add relation to view
+            dynamicView.addMemberEntity("PRSHP", "PartyRelationship");
+            dynamicView.addAlias("PRSHP", "partyIdTo");
+            dynamicView.addAlias("PRSHP", "partyRelationshipTypeId");
+            dynamicView.addViewLink("PT", "PRSHP", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId", "partyIdTo"));
+            List<String> ownerPartyIds = UtilGenerics.cast(context.get("ownerPartyIds"));
+            EntityCondition relationshipCond = null;
+            if (UtilValidate.isEmpty(ownerPartyIds)) {
+                String partyIdFrom = userLogin.getString("partyId");
+                relationshipCond = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("partyIdFrom"), EntityOperator.EQUALS, EntityFunction.UPPER(partyIdFrom));
+            } else {
+                relationshipCond = EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, ownerPartyIds);
+            }
+            dynamicView.addAlias("PRSHP", "partyIdFrom");
+            // add the expr
+            andExprs.add(EntityCondition.makeCondition(
+                    relationshipCond, EntityOperator.AND,
+                    EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("partyRelationshipTypeId"), EntityOperator.EQUALS, EntityFunction.UPPER(partyRelationshipTypeId))));
+            fieldsToSelect.add("partyIdTo");
+        }
+
+        // get the params
+        String partyId = (String) context.get("partyId");
+        String partyTypeId = (String) context.get("partyTypeId");
+        String roleTypeId = (String) context.get("roleTypeId");
+        Debug.log("roleTypeId =================="+roleTypeId);
+        String statusId = (String) context.get("statusId");
+        String userLoginId = (String) context.get("userLoginId");
+        String externalId = (String) context.get("externalId");
+        String firstName = (String) context.get("name");
+        String lastName = (String) context.get("name");
+        String groupName = (String) context.get("name");
+        String supplier = (String) context.get("supplier");
+        String customer = (String) context.get("customer");
+        String name = (String) context.get("supplier");
+       
+        if(UtilValidate.isNotEmpty(supplier)) {
+        	name = (String) context.get("supplier");
+        }
+        else if(UtilValidate.isNotEmpty(customer)) {
+        	name = (String) context.get("customer");
+        }
+
+        // check for a partyId
+        if (UtilValidate.isNotEmpty(partyId)) {
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("partyId"), EntityOperator.LIKE, EntityFunction.UPPER("%"+partyId+"%")));
+        }
+
+        // now the statusId - send ANY for all statuses; leave null for just enabled; or pass a specific status
+        if (UtilValidate.isNotEmpty(statusId)) {
+            andExprs.add(EntityCondition.makeCondition("statusId", statusId));
+        } else {
+            // NOTE: _must_ explicitly allow null as it is not included in a not equal in many databases... odd but true
+            andExprs.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", GenericEntity.NULL_FIELD), EntityOperator.OR, EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED")));
+        }
+        // check for partyTypeId
+        if (UtilValidate.isNotEmpty(partyTypeId)) {
+            andExprs.add(EntityCondition.makeCondition("partyTypeId", partyTypeId));
+        }
+
+        if (UtilValidate.isNotEmpty(externalId)) {
+            andExprs.add(EntityCondition.makeCondition("externalId", externalId));
+        }
+        // ----
+        // UserLogin Fields
+        // ----
+
+        // filter on user login
+        if (UtilValidate.isNotEmpty(userLoginId)) {
+
+            // modify the dynamic view
+            dynamicView.addMemberEntity("UL", "UserLogin");
+            dynamicView.addAlias("UL", "userLoginId");
+            dynamicView.addViewLink("PT", "UL", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+
+            // add the expr
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("userLoginId"), EntityOperator.LIKE, EntityFunction.UPPER("%"+userLoginId+"%")));
+            fieldsToSelect.add("userLoginId");
+        }
+
+        // ----
+        // PartyGroup Fields
+        // ----
+
+        Debug.log("name =========="+name);
+        
+        // filter on groupName
+        if (UtilValidate.isNotEmpty(name)) {
+
+            // modify the dynamic view
+            dynamicView.addMemberEntity("PG", "PartyGroup");
+            dynamicView.addAlias("PG", "groupName");
+            dynamicView.addViewLink("PT", "PG", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
+            
+            dynamicView.addMemberEntity("PE", "Person");
+            dynamicView.addAlias("PE", "firstName");
+            dynamicView.addAlias("PE", "lastName");
+            dynamicView.addViewLink("PT", "PE", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
+
+            // add the expr
+            //andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("groupName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%")), EntityOperator.OR, EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%"))   );
+            
+			/*
+			 * andExprs.add(EntityCondition.makeCondition( relationshipCond,
+			 * EntityOperator.AND, EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(
+			 * "partyRelationshipTypeId"), EntityOperator.EQUALS,
+			 * EntityFunction.UPPER(partyRelationshipTypeId))));
+			 */
+            //andExprs.add(EntityCondition.makeCondition(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("groupName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%"))), EntityOperator.OR, EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%"))    );
+            
+            EntityCondition groupNameCondition = null;
+            groupNameCondition = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("groupName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%"));
+            
+            EntityCondition firstNameCondition = null;
+            firstNameCondition = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%"));
+            
+            EntityCondition lastNameCondition = null;
+            lastNameCondition = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE, EntityFunction.UPPER("%"+name+"%"));
+            
+            EntityCondition EntityConditionOr = EntityCondition.makeCondition( firstNameCondition, EntityOperator.OR, lastNameCondition);
+            
+            EntityCondition nameEntityConditionOr = EntityCondition.makeCondition( EntityConditionOr, EntityOperator.OR, groupNameCondition);
+            Debug.log("nameEntityConditionOr =========="+nameEntityConditionOr);
+            		
+            andExprs.add(nameEntityConditionOr);
+			/*
+			 * EntityCondition relationshipCond = null; if
+			 * (UtilValidate.isEmpty(ownerPartyIds)) { String partyIdFrom =
+			 * userLogin.getString("partyId"); relationshipCond =
+			 * EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("partyIdFrom"),
+			 * EntityOperator.EQUALS, EntityFunction.UPPER(partyIdFrom)); } else {
+			 * relationshipCond = EntityCondition.makeCondition("partyIdFrom",
+			 * EntityOperator.IN, ownerPartyIds); } dynamicView.addAlias("PRSHP",
+			 * "partyIdFrom"); // add the expr andExprs.add(EntityCondition.makeCondition(
+			 * relationshipCond, EntityOperator.AND,
+			 * EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(
+			 * "partyRelationshipTypeId"), EntityOperator.EQUALS,
+			 * EntityFunction.UPPER(partyRelationshipTypeId))));
+			 */	
+            		
+            fieldsToSelect.add("groupName");
+            fieldsToSelect.add("firstName");
+            fieldsToSelect.add("lastName");
+            orderBy.add("lastName");
+            orderBy.add("firstName");
+        }
+
+        // ----
+        // Person Fields
+        // ----
+
+        
+        
+        
+
+        // ----
+        // RoleType Fields
+        // ----
+
+        // filter on role member
+
+            // add role to view
+            dynamicView.addMemberEntity("PR", "PartyRole");
+            dynamicView.addAlias("PR", "roleTypeId");
+            dynamicView.addViewLink("PT", "PR", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+
+            // add the expr
+            Debug.log("1 supplier =========="+supplier);
+            Debug.log("1 customer =========="+customer);
+            
+            if(UtilValidate.isNotEmpty(roleTypeId)) {
+            	andExprs.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList(roleTypeId)));
+            }
+            else if( (UtilValidate.isNotEmpty(supplier) && UtilValidate.isNotEmpty(customer)) ||  (UtilValidate.isEmpty(supplier) && UtilValidate.isEmpty(customer)) ) {
+            	Debug.log("1 ==========");
+                
+            	andExprs.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER", "CUSTOMER")));
+            }
+            else if(UtilValidate.isNotEmpty(supplier)) {
+            	Debug.log("2 ==========");
+                andExprs.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER")));
+            }
+            else if(UtilValidate.isNotEmpty(customer)) {
+            	Debug.log("3 ==========");
+                andExprs.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("CUSTOMER")));
+            }
+            
+            
+            fieldsToSelect.add("roleTypeId");
+
+        // ----
+        // PartyClassificationGroup Fields
+        // ----
+
+        List<String> partyClassificationGroupIds = (List) context.get("partyClassificationGroupId");
+        if (UtilValidate.isNotEmpty(partyClassificationGroupIds)) {
+            // add PartyClassification to view
+            dynamicView.addMemberEntity("PC", "PartyClassification");
+            dynamicView.addAlias("PC", "partyClassificationGroupId");
+            dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+
+            // add the expr
+            andExprs.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, partyClassificationGroupIds));
+            fieldsToSelect.add("partyClassificationGroupId");
+        }
+
+        // ----
+        // PartyIdentification Fields
+        // ----
+
+        String idValue = (String) context.get("idValue");
+        String partyIdentificationTypeId = (String) context.get("partyIdentificationTypeId");
+        if ("I".equals(extInfo) ||
+                UtilValidate.isNotEmpty(idValue) ||
+                UtilValidate.isNotEmpty(partyIdentificationTypeId)) {
+
+            // add role to view
+            dynamicView.addMemberEntity("PAI", "PartyIdentification");
+            dynamicView.addAlias("PAI", "idValue");
+            dynamicView.addAlias("PAI", "partyIdentificationTypeId");
+            dynamicView.addViewLink("PT", "PAI", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+            fieldsToSelect.add("idValue");
+            fieldsToSelect.add("partyIdentificationTypeId");
+            if (UtilValidate.isNotEmpty(idValue)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("idValue"), EntityOperator.LIKE, EntityFunction.UPPER("%".concat(idValue).concat("%"))));
+            }
+            if (UtilValidate.isNotEmpty(partyIdentificationTypeId)) {
+                andExprs.add(EntityCondition.makeCondition("partyIdentificationTypeId", partyIdentificationTypeId));
+            }
+        }
+
+        // ----
+        // InventoryItem Fields
+        // ----
+
+        // filter on inventory item's fields
+        String inventoryItemId = (String) context.get("inventoryItemId");
+        String serialNumber = (String) context.get("serialNumber");
+        String softIdentifier = (String) context.get("softIdentifier");
+        if (UtilValidate.isNotEmpty(inventoryItemId) ||
+                UtilValidate.isNotEmpty(serialNumber) ||
+                UtilValidate.isNotEmpty(softIdentifier)) {
+
+            // add role to view
+            dynamicView.addMemberEntity("II", "InventoryItem");
+            dynamicView.addAlias("II", "ownerPartyId");
+            dynamicView.addViewLink("PT", "II", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId", "ownerPartyId"));
+        }
+        if (UtilValidate.isNotEmpty(inventoryItemId)) {
+            dynamicView.addAlias("II", "inventoryItemId");
+            // add the expr
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("inventoryItemId"), EntityOperator.LIKE, EntityFunction.UPPER("%" + inventoryItemId + "%")));
+            fieldsToSelect.add("inventoryItemId");
+        }
+        if (UtilValidate.isNotEmpty(serialNumber)) {
+            dynamicView.addAlias("II", "serialNumber");
+            // add the expr
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("serialNumber"), EntityOperator.LIKE, EntityFunction.UPPER("%" + serialNumber + "%")));
+            fieldsToSelect.add("serialNumber");
+        }
+        if (UtilValidate.isNotEmpty(softIdentifier)) {
+            dynamicView.addAlias("II", "softIdentifier");
+            // add the expr
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("softIdentifier"), EntityOperator.LIKE, EntityFunction.UPPER("%" + softIdentifier + "%")));
+            fieldsToSelect.add("softIdentifier");
+        }
+
+        // ----
+        // PostalAddress fields
+        // ----
+        String stateProvinceGeoId = (String) context.get("stateProvinceGeoId");
+        if ( "P".equals(extInfo) ||
+                UtilValidate.isNotEmpty(context.get("address1"))|| UtilValidate.isNotEmpty(context.get("address2"))||
+                UtilValidate.isNotEmpty(context.get("city"))|| UtilValidate.isNotEmpty(context.get("postalCode"))||
+                UtilValidate.isNotEmpty(context.get("countryGeoId"))|| (UtilValidate.isNotEmpty(stateProvinceGeoId))) {
+            // add address to dynamic view
+            dynamicView.addMemberEntity("PC", "PartyContactMech");
+            dynamicView.addMemberEntity("PA", "PostalAddress");
+            dynamicView.addAlias("PC", "contactMechId");
+            dynamicView.addAlias("PA", "address1");
+            dynamicView.addAlias("PA", "address2");
+            dynamicView.addAlias("PA", "city");
+            dynamicView.addAlias("PA", "stateProvinceGeoId");
+            dynamicView.addAlias("PA", "countryGeoId");
+            dynamicView.addAlias("PA", "postalCode");
+            dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+            dynamicView.addViewLink("PC", "PA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
+
+            // filter on address1
+            String address1 = (String) context.get("address1");
+            if (UtilValidate.isNotEmpty(address1)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("address1"), EntityOperator.LIKE, EntityFunction.UPPER("%" + address1 + "%")));
+            }
+
+            // filter on address2
+            String address2 = (String) context.get("address2");
+            if (UtilValidate.isNotEmpty(address2)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("address2"), EntityOperator.LIKE, EntityFunction.UPPER("%" + address2 + "%")));
+            }
+
+            // filter on city
+            String city = (String) context.get("city");
+            if (UtilValidate.isNotEmpty(city)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("city"), EntityOperator.LIKE, EntityFunction.UPPER("%" + city + "%")));
+            }
+
+            // filter on state geo
+            if (UtilValidate.isNotEmpty(stateProvinceGeoId)) {
+                andExprs.add(EntityCondition.makeCondition("stateProvinceGeoId", stateProvinceGeoId));
+            }
+
+            // filter on postal code
+            String postalCode = (String) context.get("postalCode");
+            if (UtilValidate.isNotEmpty(postalCode)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("postalCode"), EntityOperator.LIKE, EntityFunction.UPPER("%" + postalCode + "%")));
+            }
+
+            fieldsToSelect.add("postalCode");
+            fieldsToSelect.add("city");
+            fieldsToSelect.add("stateProvinceGeoId");
+        }
+
+        // ----
+        // Generic CM Fields
+        // ----
+        
+            // add info to dynamic view
+            dynamicView.addMemberEntity("PC", "PartyContactMech");
+            dynamicView.addMemberEntity("CM", "ContactMech");
+            dynamicView.addAlias("PC", "contactMechId");
+            dynamicView.addAlias("CM", "infoString");
+            dynamicView.addViewLink("PT", "PC", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
+            dynamicView.addViewLink("PC", "CM", Boolean.TRUE, ModelKeyMap.makeKeyMapList("contactMechId"));
+
+            // filter on infoString
+            String infoString = (String) context.get("infoString");
+            if (UtilValidate.isNotEmpty(infoString)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("infoString"), EntityOperator.LIKE, EntityFunction.UPPER("%"+infoString+"%")));
+                fieldsToSelect.add("infoString");
+            }
+        
+        // ----
+        // TelecomNumber Fields
+        // ----
+        
+            // add telecom to dynamic view
+            //dynamicView.addMemberEntity("PC", "PartyContactMech");
+            dynamicView.addMemberEntity("TM", "TelecomNumber");
+            //dynamicView.addAlias("PC", "contactMechId");
+            dynamicView.addAlias("TM", "countryCode");
+            dynamicView.addAlias("TM", "areaCode");
+            dynamicView.addAlias("TM", "contactNumber");
+            //dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+            dynamicView.addViewLink("PC", "TM", Boolean.TRUE, ModelKeyMap.makeKeyMapList("contactMechId"));
+
+            // filter on countryCode
+            String countryCode = (String) context.get("countryCode");
+            if (UtilValidate.isNotEmpty(countryCode)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("countryCode"), EntityOperator.EQUALS, EntityFunction.UPPER(countryCode)));
+            }
+
+            // filter on areaCode
+            String areaCode = (String) context.get("areaCode");
+            if (UtilValidate.isNotEmpty(areaCode)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("areaCode"), EntityOperator.EQUALS, EntityFunction.UPPER(areaCode)));
+            }
+
+            // filter on contact number
+            String contactNumber = (String) context.get("contactNumber");
+            if (UtilValidate.isNotEmpty(contactNumber)) {
+                andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("contactNumber"), EntityOperator.EQUALS, EntityFunction.UPPER(contactNumber)));
+            }
+            fieldsToSelect.add("contactNumber");
+            fieldsToSelect.add("areaCode");
+       
+        // ---- End of Dynamic View Creation
+
+        // build the main condition, add the extend condition is it present
+        if (UtilValidate.isNotEmpty(extCond)) {
+            andExprs.add(extCond);
+        }
+        if (UtilValidate.isNotEmpty(andExprs)) {
+            mainCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
+        }
+        if (Debug.infoOn()) {
+            Debug.logInfo("In findParty mainCond=" + mainCond, module);
+        }
+
+        // do the lookup
+        if (UtilValidate.isNotEmpty(noConditionFind) &&
+                ("Y".equals(noConditionFind) || andExprs.size()>1)) { //exclude on condition the status expr
+            try {
+                // set distinct on so we only get one row per party
+                // using list iterator
+                listIt = EntityQuery.use(delegator).select(UtilMisc.toSet(fieldsToSelect))
+                        .from(dynamicView)
+                        .where(mainCond)
+                        .orderBy(orderBy)
+                        .cursorScrollInsensitive()
+                        .distinct()
+                        .queryIterator();
+            } catch (GenericEntityException e) {
+                String errMsg = "Failure in party find operation, rolling back transaction: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "PartyLookupPartyError",
+                        UtilMisc.toMap("errMessage", e.toString()), locale));
+            }
+        }
+        Debug.log("listIt =========================="+listIt);
+        result.put("listIt", listIt);
+        return result;
+    }
 }

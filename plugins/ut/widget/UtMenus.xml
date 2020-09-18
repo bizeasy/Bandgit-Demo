@@ -37,10 +37,14 @@ under the License.
             <link target="contacts"/>
         </menu-item>
         <menu-item name="customerContacts" title="Customer Contacts">
-            <link target="customers"/>
+            <link target="customers">
+             <parameter param-name="roleTypeId" value="CUSTOMER"/>
+            </link>
         </menu-item>
         <menu-item name="supplierContacts" title="Supplier Contacts">
-            <link target="suppliers"/>
+            <link target="suppliers">
+             <parameter param-name="roleTypeId" value="SUPPLIER"/>
+            </link>
         </menu-item>
     </menu>
     <menu name="SalesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

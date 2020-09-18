@@ -273,9 +273,7 @@ under the License.
         <field name="partyId"><text size="15" /></field>
         <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
         <field name="externalId"><text size="15" /></field> -->
-        <field name="lastName"><text size="15"/></field>
-        <field name="firstName"><text size="15"/></field>
-        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text size="15"/></field>
+        <field name="supplier" title="Name"><text size="15"/></field>
         <!-- <field name="roleTypeId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" key-field-name="roleTypeId">
@@ -285,11 +283,11 @@ under the License.
                 <option key="SUPPLIER" description="Supplier"/>
             </drop-down>
         </field> -->
-        <field name="partyTypeId" title="${uiLabelMap.CommonType}">
+        <!-- <field name="partyTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyType"/>
             </drop-down>
-        </field>
+        </field> -->
         <!-- <field name="idValue"><text size="15"/></field>
         <field name="partyIdentificationTypeId">
             <drop-down allow-empty="true">
@@ -329,7 +327,7 @@ under the License.
             <sort-field name="externalId"/>
             <sort-field name="lastName"/>
             <sort-field name="firstName"/>
-            <sort-field name="groupName"/>
+            <sort-field name="supplier"/>
             <sort-field name="roleTypeId"/>
             <sort-field name="partyTypeId"/>
             <sort-field name="partyClassificationGroupId"/>

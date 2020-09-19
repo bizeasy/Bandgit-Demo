@@ -52,6 +52,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindCategory"/>
     </request-map>
+    <request-map uri="LookupProductAndPrice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupProductAndPrice"/>
+    </request-map>
     <!-- <request-map uri="contacts"><security https="true" auth="true"/><response name="success" type="view" value="findparty"/></request-map> -->
     
     <request-map uri="sales"><security https="true" auth="true"/><response name="success" type="view" value="sales"/></request-map>
@@ -71,6 +75,7 @@ under the License.
     
     <view-map name="FindProduct" type="screen" page="component://ut/widget/UtScreens.xml#FindProduct"/>
     <view-map name="FindCategory" type="screen" page="component://ut/widget/UtScreens.xml#FindCategory"/>
+    <view-map name="LookupProductAndPrice" type="screen" page="component://ut/widget/UtScreens.xml#LookupProductAndPrice"/>
     
     <view-map name="sales" type="screen" page="component://ut/widget/UtScreens.xml#sales"/>
     <view-map name="stock" type="screen" page="component://ut/widget/UtScreens.xml#stock"/>

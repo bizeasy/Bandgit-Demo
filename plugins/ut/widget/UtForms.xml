@@ -31,7 +31,7 @@ under the License.
         <field name="statusId"><hidden value="PARTY_ENABLED"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="hideFields"><hidden value="Y"/></field>
-        <field name="partyId"><text size="15" /></field>
+        <field name="partyId" title="Id"><text size="15" /></field>
         <field name="supplier" title="Supplier"><text size="15"/></field>
         <field name="customer" title="Customer"><text size="15"/></field>
         <field name="searchButton" widget-style="search"><submit/></field>
@@ -76,7 +76,7 @@ under the License.
     </form>
     
     <grid name="ListParty" target="expirePartyRate" list-name="listIt"
-          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+          odd-row-style="alternate-row" default-table-style="basic-table">
         <actions>
             <service service-name="performUtFindParty" auto-field-map="parameters" result-map-list="listIt"/>
         </actions>
@@ -108,7 +108,7 @@ under the License.
         <field name="name"><display description="${groovy:org.apache.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, true)}"/></field>
         <field name="roleTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="RoleType"/></field>
         <!-- <field name="mainRole" title="${uiLabelMap.PartyMainRole}"><display description="${mainRole.description}"/></field> -->
-        <field name="createdDate" sort-field="true"><display type="date"/></field>
+        <!-- <field name="createdDate" sort-field="true"><display type="date"/></field> -->
         <!-- <field name="lastModifiedDate" sort-field="true"><display type="date"/></field> -->
         <field name="contactNumber" title="Phone Number" sort-field="true"><display/></field>
         <field name="infoString" title="Email Address"><display/></field>
@@ -161,7 +161,7 @@ under the License.
             </radio>
         </field> -->
         <field name="hideFields"><hidden value="Y"/></field>
-        <field name="partyId"><text size="15" /></field>
+        <field name="partyId"  title="Id"><text size="15" /></field>
         <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
         <field name="externalId"><text size="15" /></field> -->
         <field name="customer" title="Name"><text size="15"/></field>
@@ -270,7 +270,7 @@ under the License.
             </radio>
         </field> -->
         <field name="hideFields"><hidden value="Y"/></field>
-        <field name="partyId"><text size="15" /></field>
+        <field name="partyId"  title="Id"><text size="15" /></field>
         <!-- <field name="userLoginId"><lookup target-form-name="LookupUserLogin" size="15"/></field>
         <field name="externalId"><text size="15" /></field> -->
         <field name="supplier" title="Name"><text size="15"/></field>
@@ -358,5 +358,263 @@ under the License.
             <sort-field name="searchButton"/>
         </sort-order>
     </form>
+    
+    <!-- <form name="LookupProductAndPrice" target="LookupProductAndPrice" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="Product" default-field-type="hidden"/>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="primaryProductCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="brandName"><hidden value="HBS"/></field>
+        <field name="currencyUomId"><hidden value="GBP"/></field>
+        
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}">
+            <drop-down allow-empty="false" no-current-selected-key="DEFAULT_PRICE">
+                <entity-options entity-name="ProductPriceType" key-field-name="productPriceTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productPricePurposeId">
+            <drop-down allow-empty="false" no-current-selected-key="PURCHASE">
+                <entity-options entity-name="ProductPricePurpose" key-field-name="productPricePurposeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="price" title="${uiLabelMap.ProductPrice}"><range-find/></field>
 
+        <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
+        <field name="filterByDate"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListLookupProductAndPrice" list-name="listIt" title="" type="list"
+        paginate-target="LookupProductAndPrice" odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ProductCategoryMemberAndPrice"/>
+                <field-map field-name="orderBy" value="productId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>            
+            <set field="hasVariants" value="${groovy: delegator.findByAnd('ProductAssoc', org.apache.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true).size() > 0}" type="Boolean"/>
+        </row-actions>
+        
+        <field name="productId" title=" " widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
+            <hyperlink description="${productId}" target="javascript:set_value('${productId}')" also-hidden="false" target-type="plain"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
+       
+        <field name="productId" widget-style="buttontext">
+            <hyperlink description="${productId}" target="javascript:set_value('${productId}')" also-hidden="false" target-type="plain"/>
+        </field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="price" title="${uiLabelMap.ProductPrice}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="searchVariants" title=" " widget-style="buttontext" use-when="hasVariants">
+            <hyperlink description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct" also-hidden="false" target-type="plain">
+                <parameter param-name="productId"/>
+            </hyperlink>
+        </field>
+    </form> -->
+    
+    <form name="LookupProductAndPrice" target="LookupProductAndPrice" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden"/> -->
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
+        <field name="internalName" title="Name"><text-find/></field>
+        <!-- <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field> -->
+        <!-- <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field> -->
+        <!-- <field name="primaryProductCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="productBrandName"><hidden value="HBS"/></field>
+        <field name="priceCurrencyUomId"><hidden value="GBP"/></field>
+        <field name="priceProductPricePurposeId"><hidden value="PURCHASE"/></field>
+        
+        <!-- <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="productCategoryId" title="Category">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" description="${categoryName} (${productCategoryId})">
+                    <entity-constraint name="productCategoryTypeId" operator="equals" value="BEST_SELL_CATEGORY"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="priceProductPriceTypeId" title="${uiLabelMap.ProductPriceType}">
+            <drop-down allow-empty="false" no-current-selected-key="DEFAULT_PRICE">
+                <entity-options entity-name="ProductPriceType" key-field-name="productPriceTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- <field name="priceProductPricePurposeId">
+            <drop-down allow-empty="false" no-current-selected-key="PURCHASE">
+                <entity-options entity-name="ProductPricePurpose" key-field-name="productPricePurposeId">
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="pricePrice" title="${uiLabelMap.ProductPrice}"><range-find/></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="filterByDate"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListLookupProductAndPrice" list-name="listIt" title="" type="list"
+        paginate-target="LookupProductAndPrice" odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ProductCategoryMemberAndPrice"/>
+                <field-map field-name="orderBy" value="productId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>            
+            <set field="hasVariants" value="${groovy: delegator.findByAnd('ProductAssoc', org.apache.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true).size() > 0}" type="Boolean"/>
+        </row-actions>
+        <!--
+        <field name="productId" title=" " widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
+            <hyperlink description="${productId}" target="javascript:set_value('${productId}')" also-hidden="false" target-type="plain"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
+        -->
+        <field name="productId" widget-style="buttontext">
+            <hyperlink description="${productId}" target="javascript:set_value('${productId}')" also-hidden="false" target-type="plain"/>
+        </field>
+        <field name="productInternalName" title="Name"><display/></field>
+        <field name="productCategoryId" title="Category"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${categoryName}"/> </field>
+        
+        <!-- <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field> -->
+        <field name="priceCurrencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="pricePrice" title="${uiLabelMap.ProductPrice}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="searchVariants" title=" " widget-style="buttontext" use-when="hasVariants">
+            <hyperlink description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct" also-hidden="false" target-type="plain">
+                <parameter param-name="productId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="FindCategory" type="single" target="FindCategory" title="" default-map-name="category"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="productCategoryTypeId"><hidden value="BEST_SELL_CATEGORY"/></field>
+        <field name="productCategoryId" title="Category Id"><text-find/></field>
+        <field name="categoryName" title="Category Name"><text-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListCategory" list-name="listIt" target="" title="" type="list" paginate-target="FindCategory"
+        odd-row-style="alternate-row" default-table-style="basic-table">
+        <actions>
+            <set field="entityName" value="ProductCategory"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="productCategoryId" sort-field="true">
+            <hyperlink description="${productCategoryId}" target="EditCategory" also-hidden="false">
+                <parameter param-name="productCategoryId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="productCategoryTypeId" sort-field="true"><display-entity entity-name="ProductCategoryType"/></field>
+        <!-- <field name="primaryParentCategoryId" sort-field="true"><display/></field> -->
+        <field name="categoryName" sort-field="true"><display/></field>
+        <field name="description" sort-field="true"><display/></field>
+    </form>
+    
+    <form name="FindProduct" type="single" target="FindProduct" title="" default-map-name="product"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="brandName"><hidden value="HBS"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="productId" title="Product Id"><text-find/></field>
+        <field name="internalName" title="Name"><text-find/></field>
+        <field name="primaryProductCategoryId" field-name="productCategoryId" title="Category">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" description="${categoryName} (${productCategoryId})">
+                    <entity-constraint name="productCategoryTypeId" operator="equals" value="BEST_SELL_CATEGORY"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListProducts" list-name="list" target="" title="" type="list" paginate-target="FindProduct"
+        odd-row-style="alternate-row" default-table-style="basic-table" override-list-size="true">
+        <actions>
+            <set field="entityName" value="Product"/>
+            <service service-name="performFindList" result-map="result" result-map-list="list">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="productId" sort-field="true">
+            <hyperlink description="${productId}" target="EditProduct" also-hidden="false">
+                <parameter param-name="productId"/>
+            </hyperlink>
+        </field>
+        <field name="productTypeId" sort-field="true"><display-entity entity-name="ProductType"/></field>
+        <field name="internalName" title="Name" sort-field="true"><display/></field>
+        <field name="brandName" sort-field="true"><display/></field>
+        <field name="primaryProductCategoryId" title="Category"><display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${categoryName}"/> </field>
+        
+        <!-- <field name="productName" sort-field="true"><display/></field> -->
+        <!-- <field name="description" sort-field="true"><display/></field> -->
+    </form>
 </forms>

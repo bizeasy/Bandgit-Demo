@@ -2998,6 +2998,7 @@ public class PartyServices {
             dynamicView.addMemberEntity("CM", "ContactMech");
             dynamicView.addAlias("PC", "contactMechId");
             dynamicView.addAlias("CM", "infoString");
+            dynamicView.addAlias("CM", "contactMechTypeId");
             dynamicView.addViewLink("PT", "PC", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
             dynamicView.addViewLink("PC", "CM", Boolean.TRUE, ModelKeyMap.makeKeyMapList("contactMechId"));
 
@@ -3005,9 +3006,10 @@ public class PartyServices {
             String infoString = (String) context.get("infoString");
             if (UtilValidate.isNotEmpty(infoString)) {
                 andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("infoString"), EntityOperator.LIKE, EntityFunction.UPPER("%"+infoString+"%")));
-                fieldsToSelect.add("infoString");
+                
             }
-        
+            
+            andExprs.add(EntityCondition.makeCondition("contactMechTypeId", "TELECOM_NUMBER"));
         // ----
         // TelecomNumber Fields
         // ----
@@ -3020,7 +3022,7 @@ public class PartyServices {
             dynamicView.addAlias("TM", "areaCode");
             dynamicView.addAlias("TM", "contactNumber");
             //dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
-            dynamicView.addViewLink("PC", "TM", Boolean.TRUE, ModelKeyMap.makeKeyMapList("contactMechId"));
+            dynamicView.addViewLink("PC", "TM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
 
             // filter on countryCode
             String countryCode = (String) context.get("countryCode");
@@ -3041,6 +3043,7 @@ public class PartyServices {
             }
             fieldsToSelect.add("contactNumber");
             fieldsToSelect.add("areaCode");
+            fieldsToSelect.add("infoString");
        
         // ---- End of Dynamic View Creation
 
@@ -3076,7 +3079,13 @@ public class PartyServices {
                         UtilMisc.toMap("errMessage", e.toString()), locale));
             }
         }
-        Debug.log("listIt =========================="+listIt);
+        try {
+        	Debug.log("listIt =========================="+listIt.getCompleteList());
+        }
+        catch(Exception e) {
+        	
+        }
+        
         result.put("listIt", listIt);
         return result;
     }

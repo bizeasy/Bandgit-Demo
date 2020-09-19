@@ -39,7 +39,7 @@ under the License.
     <screen name="findAllContacts">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleFindParty"/>
+                <set field="titleProperty" value="Contacts"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="allContacts"/>
                 <!-- asmselect parameters, must be prefixed by asm_ for SetMultipleSelectJs.ftl -->
@@ -62,7 +62,7 @@ under the License.
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet id="FindPartyPanel" title="${uiLabelMap.PartyFindParty}" navigation-menu-name="CreateNewParty"
+                                <screenlet id="FindPartyPanel" title="Contacts Search" navigation-menu-name="CreateNewParty"
                                            navigation-form-name="LookupParty" save-collapsed="false" collapsible="true" initially-collapsed="${initialyCollapsed}">
                                     <include-form name="LookupContacts" location="component://ut/widget/UtForms.xml"/>
                                 </screenlet>
@@ -107,7 +107,7 @@ under the License.
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet id="FindPartyPanel" title="${uiLabelMap.PartyFindParty}" navigation-menu-name="CreateNewParty"
+                                <screenlet id="FindPartyPanel" title="Customer Search" navigation-menu-name="CreateNewParty"
                                            navigation-form-name="LookupParty" save-collapsed="false" collapsible="true" initially-collapsed="${initialyCollapsed}">
                                     <include-form name="LookupCustomer" location="component://ut/widget/UtForms.xml"/>
                                 </screenlet>
@@ -152,7 +152,7 @@ under the License.
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet id="FindPartyPanel" title="${uiLabelMap.PartyFindParty}" navigation-menu-name="CreateNewParty"
+                                <screenlet id="FindPartyPanel" title="Supplier Search" navigation-menu-name="CreateNewParty"
                                            navigation-form-name="LookupParty" save-collapsed="false" collapsible="true" initially-collapsed="${initialyCollapsed}">
                                     <include-form name="LookupSupplier" location="component://ut/widget/UtForms.xml"/>
                                 </screenlet>
@@ -216,20 +216,19 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProduct"/>
+                <set field="tabButtonItem" value="product"/>
             </actions>
             <widgets>
                 <decorator-screen name="UtProductsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindProduct" location="component://product/widget/catalog/ProductForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListProducts" location="component://product/widget/catalog/ProductForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
+                        	<widgets>
+                                <screenlet id="FindPartyPanel" title="Product Search" collapsible="true" initially-collapsed="${initialyCollapsed}">
+                                    <include-form name="FindProduct" location="component://ut/widget/UtForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.CommonSearchResults}" navigation-form-name="ListParty">
+                                    <include-form name="ListProducts" location="component://ut/widget/UtForms.xml"/>
+                                </screenlet>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -243,7 +242,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindCategory"/>
                 <set field="headerItem" value="categories"/>
-                <set field="tabButtonItem" value="FindCategory"/>
+                <set field="tabButtonItem" value="category"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
             </actions>
             <widgets>
@@ -251,14 +250,12 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindCategory" location="component://product/widget/catalog/CategoryForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListCategory" location="component://product/widget/catalog/CategoryForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
+                                <screenlet id="FindPartyPanel" title="Category Search" collapsible="true" initially-collapsed="${initialyCollapsed}">
+                                    <include-form name="FindCategory" location="component://ut/widget/UtForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.CommonSearchResults}" navigation-form-name="ListParty">
+                                    <include-form name="ListCategory" location="component://ut/widget/UtForms.xml"/>
+                                </screenlet>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -275,6 +272,61 @@ under the License.
             <widgets>
                 <decorator-screen name="UtCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    
+    <screen name="LookupProductAndPrice">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" from-field="uiLabelMap.PageTitleLookupProductPrice"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="GBP"/>
+                <set field="entityName" value="ProductCategoryMemberAndPrice"/>
+                <set field="searchFields" value="[productId, internalName]"/>
+                <set field="displayFields" value="[productId, internalName, price, currencyUomId]"/>
+                <set field="tabButtonItem" value="productPricing"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="UtProductsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet id="FindPartyPanel" title="Product Search" collapsible="true" initially-collapsed="${initialyCollapsed}">
+                                    <include-form name="LookupProductAndPrice" location="component://ut/widget/UtForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.CommonSearchResults}" navigation-form-name="ListParty">
+                                    <include-form name="ListLookupProductAndPrice" location="component://ut/widget/UtForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- <screen name="LookupProductAndPrice">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" from-field="uiLabelMap.PageTitleLookupProductPrice"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <set field="entityName" value="ProductAndPriceView"/>
+                <set field="searchFields" value="[productId, internalName]"/>
+                <set field="displayFields" value="[productId, internalName, price, currencyUomId]"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="UtProductsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="search-options">
+                        <include-form name="LookupProductAndPrice" location="component://product/widget/catalog/FieldLookupForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="ListLookupProductAndPrice" location="component://product/widget/catalog/FieldLookupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -1245,7 +1245,7 @@ ul#preferences-menu li a.help-link {
     padding: 4px 16px 4px 16px;
     border-top: none;
     font-weight: bold;
-    color: #ced8df;
+    color:#ced8df;
     font-size: 14px;
 }
 #app-navigation ul li ul  li {
@@ -1746,6 +1746,10 @@ form .basic-table, .screenlet-body .basic-table {
     font-weight: bold;
     text-align: left;
 }
+.basic-table .header-row-2 td a{
+    color: #ffffff;
+}
+    
 
 /* ===== Sort field style ===== */
 .basic-table .header-row-2 th .sort-order-asc, .basic-table .header-row-2 td .sort-order-asc {

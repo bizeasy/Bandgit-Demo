@@ -721,11 +721,14 @@ DIV.contentarea {
 .page-container DIV.contentarea .button-bar.tab-bar ul li {
     width: 100%;
     BACKGROUND: transparent;
-    border-bottom: 1px solid #474747;
+   
     padding: 0px;
 }
 .page-container DIV.contentarea .button-bar.tab-bar ul li.selected{
     background-color: #eff3f6;
+}
+.page-container DIV.contentarea .button-bar.tab-bar ul li ul li{
+border-bottom: 1px solid #474747;
 }
 .page-container DIV.contentarea .button-bar ul a,.page-container DIV.contentarea .button-bar a {
     padding: 1.5em 0.5em 1.5em 0.5em;

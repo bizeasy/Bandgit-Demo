@@ -85,12 +85,12 @@ a:hover, a:active {
 }
 
 body, textarea, input, select {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 body {
-    background: #B8DFFC;
-    font-size: 62.5%;
+    background: #eff3f6;
+    font-size: 80%;
     position: relative;
 }
 

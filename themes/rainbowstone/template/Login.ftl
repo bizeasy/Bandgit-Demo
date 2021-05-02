@@ -16,44 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<style type="text/css">
-.screenlet-title-bar {
-   background-color: #06070a !important;
-}
-.screenlet-title-bar img {
-    width: 233px;
-}
-.login-screenlet .screenlet-body {
-    background-color: #06070a2e !important;
-}
-.login-screenlet .screenlet-body form table tr .buttontext, .login-screenlet .screenlet-body form table tr [type="submit"] {
-    width: 100%;
-    border-radius: 4px;
-    background: none;
-    background-color: #5bbc67;
-    color: #e6e6e6;
-    text-shadow: none;
-    font-size: 15px;
-    font-weight: 500;
-}
-.login-screenlet .screenlet-body form table tr input {
-    width: 100%;
-    background: transparent;
-    padding: 10px 10px;
-    color:#fff;
-}
-input[type="password"],input[type="text"]{
-    height: 2.5em;
-    margin: 10px 0px;
-}
-body{
-  background-image:url("/images/327163.jpg");
-  <#-- background:#000; -->
-}
-#loginBar{
-display:none;
-}
-</style>
+
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = Static["org.apache.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "multitenant")>
 
@@ -66,9 +29,8 @@ display:none;
 <div id="loginBar"><span>${uiLabelMap.CommonBeLogged}</span><div id="company-logo"></div></div>
 <center>
   <div class="screenlet login-screenlet">
-    <div class="screenlet-title-bar">  
-      <img alt="OFBiz: Ut" src="/images/ofbiz_logo.png">
-      </h3>
+    <div class="screenlet-title-bar">
+      <h3>${uiLabelMap.CommonRegistered}</h3>
     </div>
     <div class="screenlet-body">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">

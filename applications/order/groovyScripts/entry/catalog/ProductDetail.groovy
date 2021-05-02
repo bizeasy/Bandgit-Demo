@@ -107,7 +107,7 @@ if (product) {
     featureOrder = []
 
     variantInfoJS = new StringBuffer()
-    variantInfoJS.append("<script language=\"JavaScript\" type=\"text/javascript\">\n    \$(document).ready(function(\$) {\n")
+    variantInfoJS.append("<script language=\"JavaScript\" type=\"text/javascript\">\n    jQuery(document).ready(function(jQuery) {\n")
 
     // set this as a last viewed
     LAST_VIEWED_TO_KEEP = 10 // modify this to change the number of last viewed to keep
@@ -349,8 +349,10 @@ if (product) {
                             contentWrapper = new ProductContentWrapper(imageMap[key], request)
 
                             // initial image paths
-                            detailImage = contentWrapper.get("DETAIL_IMAGE_URL", "url") ?: productContentWrapper.get("DETAIL_IMAGE_URL", "url")
-                            largeImage = contentWrapper.get("LARGE_IMAGE_URL", "url") ?: productContentWrapper.get("LARGE_IMAGE_URL", "url")
+                            detailImage = contentWrapper.getProductContentAsText(product, "DETAIL_IMAGE_URL", request, "string") 
+                            ?: productContentWrapper.get("DETAIL_IMAGE_URL", "string")
+                            largeImage = contentWrapper.getProductContentAsText(product, "LARGE_IMAGE_URL", request, "string") 
+                            ?: productContentWrapper.get("LARGE_IMAGE_URL", "string")
 
                             // full image URLs
                             detailImageUrl = null
@@ -561,6 +563,7 @@ if (product) {
             }
         }
     }
+    variantInfoJS.append("        variantPrices['" + product.productId + "'] = '" + UtilFormatOut.formatCurrency(priceMap.price, currencyUomId, locale, 10) + "';\n")
     variantInfoJS.append("    });\n</script>\n")
     context.variantInfoJavaScript = variantInfoJS
 

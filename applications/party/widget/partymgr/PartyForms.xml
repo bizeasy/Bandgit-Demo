@@ -164,7 +164,6 @@ under the License.
         <field name="createdDate" sort-field="true"><display type="date"/></field>
         <field name="lastModifiedDate" sort-field="true"><display type="date"/></field>
         <field name="partyAction" title=" "><include-menu name="ListPartyAction" location="component://party/widget/partymgr/PartyMenus.xml"/></field>
-        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}" sort-field="true"><display/></field>
         <sort-order>
              <last-field name="createdDate"/>
              <last-field name="lastModifiedDate"/>

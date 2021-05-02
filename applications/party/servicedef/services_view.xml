@@ -108,46 +108,6 @@ under the License.
 
         <attribute name="listIt" type="org.apache.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
     </service>
-    
-    <service name="performUtFindParty" engine="java"
-        location="org.apache.ofbiz.party.party.PartyServices" invoke="performUtFindParty">
-        <description>General Party Find Service, duplicated for screen widget purpose, Used in the new findparty page in the Party Manager, etc</description>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/> <!-- can be null or ANY to include any -->
-        <attribute name="noConditionFind" type="String" mode="IN" optional="true" default-value="N"/>
-        <attribute name="extInfo" type="String" mode="IN" optional="true"/>
-        <attribute name="extCond" type="org.apache.ofbiz.entity.condition.EntityCondition" mode="IN" optional="true">
-            <description>EntityCondition that can be send to this service to manage complex search case</description>
-        </attribute>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this, can do partial, case insensitive, etc -->
-        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="userLoginId" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this, can do partial, case insensitive, etc -->
-        <attribute name="externalId" type="String" mode="IN" optional="true"/>
-        <attribute name="groupName" type="String" mode="IN" optional="true"/>
-        <attribute name="firstName" type="String" mode="IN" optional="true"/>
-        <attribute name="lastName" type="String" mode="IN" optional="true"/>
-        <attribute name="supplier" type="String" mode="IN" optional="true"/>
-        <attribute name="customer" type="String" mode="IN" optional="true"/>
-        <attribute name="address1" type="String" mode="IN" optional="true"/>
-        <attribute name="address2" type="String" mode="IN" optional="true"/>
-        <attribute name="city" type="String" mode="IN" optional="true"/>
-        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
-        <attribute name="infoString" type="String" mode="IN" optional="true"/> <!-- the ContactMech infoString -->
-        <attribute name="countryCode" type="String" mode="IN" optional="true"/>
-        <attribute name="areaCode" type="String" mode="IN" optional="true"/>
-        <attribute name="contactNumber" type="String" mode="IN" optional="true"/>
-        <attribute name="idValue" type="String" mode="IN" optional="true"/>
-        <attribute name="partyIdentificationTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this -->
-        <attribute name="serialNumber" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this -->
-        <attribute name="softIdentifier" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this -->
-        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="ownerPartyIds" type="List" mode="IN" optional="true"/><!-- Lead Owners Parties -->
-        <attribute name="sortField" type="String" mode="IN" optional="true"/>
-        <attribute name="partyClassificationGroupId" type="List" mode="IN" optional="true"/>
-
-        <attribute name="listIt" type="org.apache.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
-    </service>
 
     <service name="getPartyContactMechValueMaps" engine="java"
             transaction-timeout="7200"

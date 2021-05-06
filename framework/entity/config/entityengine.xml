@@ -486,7 +486,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="postgres"
-                jdbc-password="vikram006"
+                jdbc-password="ofbiztest"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"

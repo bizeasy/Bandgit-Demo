@@ -24,8 +24,8 @@ under the License.
     </ul>
   <p>
     <div class="poweredBy"><span class="footerTextColour">${uiLabelMap.CommonPoweredBy} 
-        <a href="http://ofbiz.apache.org" class="noicon">OFBiz </a></span><span class="footerTextColour">Copyright 2001-${nowTimestamp?string("yyyy")} 
-        <a href="http://www.apache.org" class="noicon">The Apache Software Foundation - www.apache.org</a></span> 
+        <a href="www.vgsys.co" class="noicon">VGS </a></span><span class="footerTextColour">Copyright 2001-${nowTimestamp?string("yyyy")} 
+        <a href="www.vgsys.co" class="noicon"> Vyas Gurukul Systems - www.vgsys.co</a></span> 
         <span class="footerTextColour">
             ${uiLabelMap.CommonRelease} <#include "ofbizhome://VERSION" ignore_missing=true/>
             <#include "ofbizhome://runtime/SvnInfo.ftl" ignore_missing=true/>
